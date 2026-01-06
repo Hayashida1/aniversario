@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Feliz Aniversário!</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: #fff;
+    }
+
+    /* LETREIRO */
+    .marquee {
+      background: #ff5f9a;
+      color: #ffffff;
+      font-weight: 900;
+      font-size: clamp(28px, 7vw, 64px);
+      white-space: nowrap;
+      overflow: hidden;
+      padding: 16px 0;
+      text-transform: uppercase;
+      z-index: 10;
+    }
+
+    .track {
+      display: inline-block;
+      padding-left: 100%;
+      animation: move 10s linear infinite;
+      will-change: transform;
+    }
+
+    @keyframes move {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-100%); }
+    }
+
+    /* CONTEÚDO COM FUNDO */
+    .content {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding-top: 48px;
+      padding-bottom: calc(32px + env(safe-area-inset-bottom));
+
+      /* FUNDO DE CORAÇÕES */
+      background-image: url("coracoes.jfif");
+      background-repeat: repeat;
+      background-size: 600px;
+      background-position: center;
+
+      /* leve véu branco para não poluir */
+      position: relative;
+    }
+
+    .content::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,0.55);
+      z-index: 0;
+    }
+
+    /* CORAÇÃO */
+    .heart-wrap {
+      width: min(420px, 88vw);
+      aspect-ratio: 1 / 1;
+      position: relative;
+      display: grid;
+      place-items: center;
+      filter: drop-shadow(0 12px 24px rgba(0,0,0,.14));
+      z-index: 1;
+    }
+
+    .heart-shape {
+      position: absolute;
+      inset: 0;
+      transform: rotate(-45deg);
+      background: #ff5f9a;
+      border-radius: 16px;
+    }
+
+    .heart-shape::before,
+    .heart-shape::after {
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: #ff5f9a;
+      border-radius: 50%;
+    }
+
+    .heart-shape::before {
+      top: -50%;
+      left: 0;
+    }
+
+    .heart-shape::after {
+      left: 50%;
+      top: 0;
+    }
+
+    .heart-text {
+      position: relative;
+      z-index: 1;
+      width: 75%;
+      text-align: center;
+      color: #ffffff;
+      font-size: clamp(14px, 3.6vw, 17px);
+      line-height: 1.5;
+      padding: 10px;
+    }
+
+    /* Telas muito pequenas */
+    @media (max-width: 360px) {
+      .heart-wrap {
+        width: 90vw;
+      }
+      .heart-text {
+        width: 80%;
+      }
+    }
+
+    /* Acessibilidade */
+    @media (prefers-reduced-motion: reduce) {
+      .track {
+        animation: none;
+        padding-left: 0;
+        transform: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- LETREIRO -->
+  <div class="marquee">
+    <div class="track">
+      FELIZ ANIVERSÁRIO! FELIZ ANIVERSÁRIO! FELIZ ANIVERSÁRIO!
+    </div>
+  </div>
+
+  <!-- CONTEÚDO -->
+  <main class="content">
+    <div class="heart-wrap">
+      <div class="heart-shape"></div>
+      <div class="heart-text">
+        Eu te amo muito meu amor e fico feliz de estar com você numa nova fase muito importante para você que éh seus 18 anos.
+        <br><br>
+        Muita felicidades para você e espero que tenha muitas conquistas nesse ano &lt;3
+      </div>
+    </div>
+  </main>
+
+</body>
+</html>
