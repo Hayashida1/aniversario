@@ -6,138 +6,156 @@
   <title>Feliz Aniversário!</title>
 
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
+    :root{
+      --pink:#ff5f9a;
+      --veil: rgba(255,255,255,.55); /* “véu” para o fundo não competir com o texto */
+    }
+
+    *{
+      box-sizing:border-box;
+      margin:0;
+      padding:0;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial;
     }
 
-    body {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      background: #fff;
+    body{
+      background:#fff;
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
     }
 
     /* LETREIRO */
-    .marquee {
-      background: #ff5f9a;
-      color: #ffffff;
-      font-weight: 900;
-      font-size: clamp(28px, 7vw, 64px);
+    .marquee{
+      background: var(--pink);
+      color:#fff;
+      font-weight:900;
+      font-size: clamp(26px, 7vw, 62px);
       white-space: nowrap;
       overflow: hidden;
-      padding: 16px 0;
       text-transform: uppercase;
-      z-index: 10;
+
+      padding: calc(14px + env(safe-area-inset-top)) 0 14px;
     }
 
-    .track {
-      display: inline-block;
-      padding-left: 100%;
+    .track{
+      display:inline-block;
+      padding-left:100%;
       animation: move 10s linear infinite;
       will-change: transform;
     }
 
-    @keyframes move {
-      from { transform: translateX(0); }
-      to   { transform: translateX(-100%); }
+    @keyframes move{
+      from{ transform: translateX(0); }
+      to{ transform: translateX(-100%); }
     }
 
-    /* CONTEÚDO COM FUNDO */
-    .content {
+    /* ÁREA PRINCIPAL (corrigida para iPhone) */
+    .content{
+      position: relative;
       flex: 1;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      padding-top: 48px;
-      padding-bottom: calc(32px + env(safe-area-inset-bottom));
 
-      /* FUNDO DE CORAÇÕES */
+      /* iOS/Safari: usar viewport dinâmico para não cortar */
+      min-height: calc(100dvh - 84px);
+      display:flex;
+      justify-content:center;
+      align-items:center;
+
+      padding: 24px 16px calc(24px + env(safe-area-inset-bottom));
+      overflow:hidden;
+    }
+
+    /* Fundo com imagem + véu */
+    .content::before{
+      content:"";
+      position:absolute;
+      inset:0;
+
       background-image: url("coracoes.jfif");
       background-repeat: repeat;
-      background-size: 600px;
+      background-size: 280px;
       background-position: center;
 
-      /* leve véu branco para não poluir */
-      position: relative;
+      z-index:0;
     }
 
-    .content::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: rgba(255,255,255,0.55);
-      z-index: 0;
+    .content::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background: var(--veil);
+      z-index:1;
     }
 
     /* CORAÇÃO */
-    .heart-wrap {
-      width: min(420px, 88vw);
+    .heart-wrap{
+      position:relative;
+      z-index:2;
+
+      /* tamanho bem controlado no celular e no PC */
+      width: clamp(260px, 82vw, 420px);
       aspect-ratio: 1 / 1;
-      position: relative;
-      display: grid;
-      place-items: center;
+
+      display:grid;
+      place-items:center;
+
       filter: drop-shadow(0 12px 24px rgba(0,0,0,.14));
-      z-index: 1;
     }
 
-    .heart-shape {
-      position: absolute;
-      inset: 0;
+    .heart-shape{
+      position:absolute;
+      inset:0;
       transform: rotate(-45deg);
-      background: #ff5f9a;
+      background: var(--pink);
       border-radius: 16px;
     }
 
     .heart-shape::before,
-    .heart-shape::after {
-      content: "";
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      background: #ff5f9a;
-      border-radius: 50%;
+    .heart-shape::after{
+      content:"";
+      position:absolute;
+      width:100%;
+      height:100%;
+      background: var(--pink);
+      border-radius:50%;
     }
 
-    .heart-shape::before {
-      top: -50%;
-      left: 0;
+    .heart-shape::before{
+      top:-50%;
+      left:0;
     }
 
-    .heart-shape::after {
-      left: 50%;
-      top: 0;
+    .heart-shape::after{
+      top:0;
+      left:50%;
     }
 
-    .heart-text {
-      position: relative;
-      z-index: 1;
-      width: 75%;
-      text-align: center;
-      color: #ffffff;
-      font-size: clamp(14px, 3.6vw, 17px);
-      line-height: 1.5;
+    .heart-text{
+      position:relative;
+      z-index:1;
+
+      width: 76%;
+      text-align:center;
+      color:#fff;
+      font-size: clamp(13px, 3.8vw, 17px);
+      line-height:1.55;
+
+      /* evita “encostar” demais no coração em telas pequenas */
       padding: 10px;
     }
 
-    /* Telas muito pequenas */
-    @media (max-width: 360px) {
-      .heart-wrap {
-        width: 90vw;
-      }
-      .heart-text {
-        width: 80%;
-      }
+    /* Ajuste extra para celulares menores */
+    @media (max-width: 360px){
+      .heart-text{ width: 82%; }
+      .content::before{ background-size: 240px; }
     }
 
     /* Acessibilidade */
-    @media (prefers-reduced-motion: reduce) {
-      .track {
-        animation: none;
-        padding-left: 0;
-        transform: none;
+    @media (prefers-reduced-motion: reduce){
+      .track{
+        animation:none;
+        padding-left:0;
+        transform:none;
       }
     }
   </style>
@@ -145,17 +163,15 @@
 
 <body>
 
-  <!-- LETREIRO -->
-  <div class="marquee">
+  <header class="marquee" aria-label="Letreiro de aniversário">
     <div class="track">
-      FELIZ ANIVERSÁRIO! FELIZ ANIVERSÁRIO! FELIZ ANIVERSÁRIO!
+      FELIZ ANIVERSÁRIO!      
     </div>
-  </div>
+  </header>
 
-  <!-- CONTEÚDO -->
   <main class="content">
-    <div class="heart-wrap">
-      <div class="heart-shape"></div>
+    <div class="heart-wrap" aria-label="Mensagem em formato de coração">
+      <div class="heart-shape" aria-hidden="true"></div>
       <div class="heart-text">
         Eu te amo muito meu amor e fico feliz de estar com você numa nova fase muito importante para você que éh seus 18 anos.
         <br><br>
